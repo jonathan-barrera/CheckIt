@@ -45,7 +45,7 @@ public class CategoryFragmentPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return "Upcoming Checkouts";
             case 1:
-                return "Important Things";
+                return "Things To Pack";
             default:
                 throw new IllegalArgumentException("Invalid fragment adapter position: " + position);
         }

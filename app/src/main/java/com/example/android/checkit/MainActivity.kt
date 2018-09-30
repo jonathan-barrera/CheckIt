@@ -1,9 +1,11 @@
 package com.example.android.checkit
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
@@ -21,5 +23,11 @@ class MainActivity : AppCompatActivity() {
 
         // Give the TabLayout the ViewPager
         sliding_tabs.setupWithViewPager(viewpager)
+    }
+
+    fun makeNewCheckout(view: View) {
+        Toast.makeText(this, "Make new checkout", Toast.LENGTH_SHORT).show()
+
+        startActivity(Intent(this, EditCheckOutActivity::class.java))
     }
 }

@@ -8,13 +8,13 @@ public class CheckOutEvent {
 
     // Variables to hold object information
     private long mDate;
-    private String mCheckOutTime;
+    private int mCheckOutTime;
     private String mAccomodationName;
 
     public CheckOutEvent(){}
 
     // Constructor
-    public CheckOutEvent(long date, String checkOutTime, String accomodationName) {
+    public CheckOutEvent(long date, int checkOutTime, String accomodationName) {
         mDate = date;
         mCheckOutTime = checkOutTime;
         mAccomodationName = accomodationName;
@@ -25,7 +25,7 @@ public class CheckOutEvent {
         return mDate;
     }
 
-    public String getCheckoutTime() {
+    public int getCheckoutTime() {
         return mCheckOutTime;
     }
 

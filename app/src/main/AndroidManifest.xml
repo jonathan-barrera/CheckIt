@@ -16,6 +16,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".database.CheckItProvider"
+            android:authorities="com.example.android.checkit"
+            android:exported="false" />
+
+        <activity android:name=".EditCheckOutActivity"></activity>
     </application>
 
 </manifest>
