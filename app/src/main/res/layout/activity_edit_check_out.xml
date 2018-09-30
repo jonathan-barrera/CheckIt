@@ -51,11 +51,13 @@
             android:textSize="@dimen/label_text_size" />
 
         <RelativeLayout
+            android:onClick="openDatePicker"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/edit_check_out_date_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
