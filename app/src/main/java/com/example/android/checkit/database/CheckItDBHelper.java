@@ -28,8 +28,8 @@ public class CheckItDBHelper extends SQLiteOpenHelper {
         String SQL_CREATE_CHECKOUTS_TABLE = "CREATE TABLE " + CheckOutEntry.TABLE_NAME_CHECK_OUTS +
                 " (" + CheckOutEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 CheckOutEntry.COLUMN_CHECKOUT_DATE + " INTEGER NON NULL, " +
-                CheckOutEntry.COLUMN_CHECKOUT_TIME + " INTEGER NON NULL, " +
-                CheckOutEntry.COLUMN_CHECKOUT_ACCOM_NAME + " TEXt NON NULL);";
+                CheckOutEntry.COLUMN_CHECKOUT_TIME + " TEXT NON NULL, " +
+                CheckOutEntry.COLUMN_CHECKOUT_ACCOM_NAME + " TEXT NON NULL);";
 
         String SQL_CREATE_THINGS_TABLE = "CREATE TABLE " + ThingEntry.TABLE_NAME_THINGS + " (" +
                 ThingEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +

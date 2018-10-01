@@ -137,11 +137,63 @@ public class CheckItProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case CHECK_OUT_ID:
+                return updateCheckOut(uri, values, selection, selectionArgs);
+            case THING_ID:
+                return updateCheckOut(uri, values, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update not supported for " + uri);
+        }
+    }
+
+    private int updateCheckOut(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        // First check that the Check Out info is valid
+        if (checkInputValidity(values)) {
+            // Get writable database
+            SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+            // Update the checkout information in the checkouts table
+            int rowsChanged = database.update(CheckOutEntry.TABLE_NAME_CHECK_OUTS, values,
+                    selection, selectionArgs);
+
+            // If one or more rows were changed, notify all listeners that the data has changed
+            if (rowsChanged != 0) {
+                getContext().getContentResolver().notifyChange(uri, null);
+            }
+
+            return rowsChanged;
+        }
         return 0;
     }
 
     // Helper method for inserting a new row into the checkouts table
     private Uri insertCheckOut(Uri uri, ContentValues values) {
+        // First check if the input is valid
+        if (checkInputValidity(values)) {
+            // Get writable database
+            SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+            // Insert the new checkout information into the database
+            long id = database.insert(CheckOutEntry.TABLE_NAME_CHECK_OUTS, null, values);
+
+            // Check if the insertion succeeded
+            if (id == -1) {
+                Timber.d("Insertion failed for: " + uri);
+                return null;
+            }
+
+            // Notify listeners that the data has changed for the checkout content uri
+            getContext().getContentResolver().notifyChange(uri, null);
+
+            return ContentUris.withAppendedId(uri, id);
+        }
+        return null;
+    }
+
+    // Helper method for checking if the user's input is valid
+    private boolean checkInputValidity(ContentValues values) {
         // First check that the Date is valid
         long date = values.getAsLong(CheckOutEntry.COLUMN_CHECKOUT_DATE);
         if (date < 0) {
@@ -149,8 +201,8 @@ public class CheckItProvider extends ContentProvider {
         }
 
         // Check that the time is valid
-        int time = values.getAsInteger(CheckOutEntry.COLUMN_CHECKOUT_TIME);
-        if (time < 0) {
+        String time = values.getAsString(CheckOutEntry.COLUMN_CHECKOUT_TIME);
+        if (TextUtils.isEmpty(time)) {
             throw new IllegalArgumentException("Check Out requires valid time.");
         }
 
@@ -160,22 +212,7 @@ public class CheckItProvider extends ContentProvider {
             throw new IllegalArgumentException("Check Out requires valid accommodation name");
         }
 
-        // Get writable database
-        SQLiteDatabase database = mDbHelper.getWritableDatabase();
-
-        // Insert the new checkout information into the database
-        long id = database.insert(CheckOutEntry.TABLE_NAME_CHECK_OUTS, null, values);
-
-        // Check if the insertion succeeded
-        if (id == -1) {
-            Timber.d("Insertion failed for: " + uri);
-            return null;
-        }
-
-        // Notify listeners that the data has changed for the checkout content uri
-        getContext().getContentResolver().notifyChange(uri, null);
-
-        return ContentUris.withAppendedId(uri, id);
+        return true;
     }
 
     // Helper method for inserting a new row into the things table

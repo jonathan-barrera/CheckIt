@@ -55,6 +55,6 @@ public class CheckItContract {
         public static final String TABLE_NAME_THINGS = "things";
 
         public static final String _ID = BaseColumns._ID;
-        public static final String COLUMN_THINGS = "things-coloumn";
+        public static final String COLUMN_THINGS = "thingsColumn";
     }
 }
