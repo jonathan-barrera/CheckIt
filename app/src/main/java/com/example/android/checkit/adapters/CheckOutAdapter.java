@@ -1,4 +1,4 @@
-package com.example.android.checkit;
+package com.example.android.checkit.adapters;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -8,10 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.checkit.EditCheckOutActivity;
+import com.example.android.checkit.R;
 import com.example.android.checkit.models.CheckOutEvent;
 import com.example.android.checkit.utils.DateUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import butterknife.BindView;

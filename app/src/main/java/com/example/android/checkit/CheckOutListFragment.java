@@ -1,8 +1,9 @@
 package com.example.android.checkit;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.BaseColumns;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.android.checkit.adapters.CheckOutAdapter;
 import com.example.android.checkit.database.CheckItContract.CheckOutEntry;
 import com.example.android.checkit.models.CheckOutEvent;
 
@@ -33,6 +35,8 @@ public class CheckOutListFragment extends Fragment implements android.support.v4
     // Views
     @BindView(R.id.check_out_list_recycler_view)
     RecyclerView mRecyclerView;
+    @BindView(R.id.fab_button)
+    FloatingActionButton mFabButton;
 
     public CheckOutListFragment() {
         // Required empty public constructor
@@ -60,6 +64,15 @@ public class CheckOutListFragment extends Fragment implements android.support.v4
 
         // Prepare the loader
         getLoaderManager().initLoader(0, null, this);
+
+        // Set onClickListener on the FAB
+        mFabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), EditCheckOutActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return rootView;
     }

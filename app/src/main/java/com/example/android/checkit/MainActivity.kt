@@ -24,10 +24,4 @@ class MainActivity : AppCompatActivity() {
         // Give the TabLayout the ViewPager
         sliding_tabs.setupWithViewPager(viewpager)
     }
-
-    fun makeNewCheckout(view: View) {
-        Toast.makeText(this, "Make new checkout", Toast.LENGTH_SHORT).show()
-
-        startActivity(Intent(this, EditCheckOutActivity::class.java))
-    }
 }
