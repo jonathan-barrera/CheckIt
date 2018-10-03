@@ -2,7 +2,9 @@ package com.example.android.checkit;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Loader;
@@ -14,10 +16,15 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -40,10 +47,6 @@ import timber.log.Timber;
 public class ThingsListFragment extends Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> {
 
     // Views
-//    @BindView(R.id.things_list_add_image_button)
-//    ImageView mAddImageView;
-//    @BindView(R.id.things_list_fragment_edit_text)
-//    EditText mEditText;
     @BindView(R.id.things_list_fragment_list_view)
     ListView mListView;
     EditText mEditText;
@@ -69,6 +72,9 @@ public class ThingsListFragment extends Fragment implements android.support.v4.a
         mEditText = header.findViewById(R.id.things_list_fragment_edit_text);
         mAddImageView = header.findViewById(R.id.things_list_add_image_button);
 
+        // Add options menu
+        setHasOptionsMenu(true);
+
         // Add header to listview
         mListView.addHeaderView(header);
 
@@ -89,7 +95,35 @@ public class ThingsListFragment extends Fragment implements android.support.v4.a
         // Initialized loader
         getLoaderManager().initLoader(0, null, this);
 
+        // TODO replace this function with something more user friendly
+        // Temporary function for delete things off of the list
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Uri uri = ContentUris.withAppendedId(ThingEntry.CONTENT_URI, id);
+                getContext().getContentResolver().delete(uri, null, null);
+                return true;
+            }
+        });
+
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_things_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // TODO finish the function for opening settings menu
+        switch(item.getItemId()) {
+            case R.id.action_delete_all_things:
+                getContext().getContentResolver().delete(ThingEntry.CONTENT_URI, null, null);
+                return true;
+            default:
+                throw new IllegalArgumentException("Invalid menu item selected: " + item);
+        }
     }
 
     // Helper method for saving things to the list of things
@@ -128,11 +162,9 @@ public class ThingsListFragment extends Fragment implements android.support.v4.a
         Toast.makeText(getContext(), toastMessage, Toast.LENGTH_SHORT).show();
     }
 
-
     @NonNull
     @Override
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        Timber.d("oncreateloader called");
         String[] projection = { ThingEntry._ID, ThingEntry.COLUMN_THINGS };
 
         return new android.support.v4.content.CursorLoader(getContext(), ThingEntry.CONTENT_URI, projection,

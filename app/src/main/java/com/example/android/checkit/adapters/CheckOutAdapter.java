@@ -13,10 +13,14 @@ import com.example.android.checkit.R;
 import com.example.android.checkit.models.CheckOutEvent;
 import com.example.android.checkit.utils.DateUtils;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by jonathanbarrera on 9/30/18.
@@ -73,6 +77,16 @@ public class CheckOutAdapter extends RecyclerView.Adapter<CheckOutAdapter.ViewHo
     // Method for setting the list of data
     public void setCheckOutData(List<CheckOutEvent> checkOutData) {
         mCheckOutEvents = checkOutData;
+
+        // Sort Check Outs chronologically (with the soonest checkout showing first)
+        Collections.sort(mCheckOutEvents, new Comparator<CheckOutEvent>() {
+            @Override
+            public int compare(CheckOutEvent o1, CheckOutEvent o2) {
+                // Divide by 1000000 so that the long can be converted into an int properly
+                return (int) ((o1.getDate() - o2.getDate())/1000000);
+            }
+        });
+
         notifyDataSetChanged();
     }
 

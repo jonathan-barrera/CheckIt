@@ -132,7 +132,44 @@ public class CheckItProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        // Get writeable database
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        // Track the number of rows delete
+        int rowsDeleted;
+
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case CHECK_OUT_ID:
+                // Delete a single row
+                selection = CheckOutEntry._ID + "=?";
+                selectionArgs = new String[]{ String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = database.delete(CheckOutEntry.TABLE_NAME_CHECK_OUTS, selection, selectionArgs);
+                break;
+            case CHECK_OUTS:
+                // Delete the entire table of check outs
+                rowsDeleted = database.delete(CheckOutEntry.TABLE_NAME_CHECK_OUTS, selection, selectionArgs);
+                break;
+            case THING_ID:
+                // Delete a single thing/valuable
+                selection = ThingEntry._ID + "=?";
+                selectionArgs = new String[]{ String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = database.delete(ThingEntry.TABLE_NAME_THINGS, selection, selectionArgs);
+                break;
+            case THINGS:
+                // Delete the entire table of things
+                rowsDeleted = database.delete(ThingEntry.TABLE_NAME_THINGS, selection, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Deletion not supported for " + uri);
+        }
+
+        // If one or more rows were deleted, then notify all listeners that data has been changed
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return rowsDeleted;
     }
 
     @Override
@@ -140,8 +177,9 @@ public class CheckItProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case CHECK_OUT_ID:
-                return updateCheckOut(uri, values, selection, selectionArgs);
-            case THING_ID:
+                // Update the check out event
+                selection = CheckOutEntry._ID + "=?";
+                selectionArgs = new String[]{ String.valueOf(ContentUris.parseId(uri))};
                 return updateCheckOut(uri, values, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update not supported for " + uri);

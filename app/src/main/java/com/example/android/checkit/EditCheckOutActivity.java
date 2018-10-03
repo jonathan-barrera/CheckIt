@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -68,7 +70,7 @@ public class EditCheckOutActivity extends AppCompatActivity {
             mDate = mCheckOutEvent.getDate();
             mDateTextView.setText(DateUtils.convertDateLongToString(mDate));
             mTime = mCheckOutEvent.getCheckOutTime();
-            mTimeTextView.setText(mTime);
+            mTimeTextView.setText(DateUtils.formatCheckOutTime(mTime));
         }
     }
 
@@ -152,7 +154,7 @@ public class EditCheckOutActivity extends AppCompatActivity {
         int month;
         int day;
         if (mDate == 0) {
-            final Calendar c = Calendar.getInstance();
+            Calendar c = Calendar.getInstance();
             year = c.get(Calendar.YEAR);
             month = c.get(Calendar.MONTH);
             day = c.get(Calendar.DAY_OF_MONTH);
@@ -209,28 +211,32 @@ public class EditCheckOutActivity extends AppCompatActivity {
                 mTime = hourOfDay + ":" + minute;
 
                 // Format the time like this: 10:30 AM, 5:30 PM, etc.
-                String minuteString;
-                if (minute < 10) {
-                     minuteString = "0" + minute;
-                } else {
-                    minuteString = String.valueOf(minute);
-                }
-
-                String timeString;
-                if (hourOfDay >= 1 && hourOfDay <= 11) {
-                    timeString = hourOfDay + ":" + minuteString + " AM";
-                } else if (hourOfDay >= 13 && hourOfDay <= 23) {
-                    timeString = (hourOfDay - 12) + ":" + minuteString + " PM";
-                } else if (hourOfDay == 12) {
-                    timeString = hourOfDay + ":" + minuteString + " PM";
-                } else {
-                    timeString = "12:" + minuteString + " AM";
-                }
-
-                mTimeTextView.setText(timeString);
+                mTimeTextView.setText(DateUtils.formatCheckOutTime(mTime));
             }
         }, hourOfDay, minute, false);
 
         timePickerDialog.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_edit_check_out, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete_check_out:
+                // Delete the check out line from the database
+                Uri uri = ContentUris.withAppendedId(CheckOutEntry.CONTENT_URI, mCheckOutEvent.getId());
+                getContentResolver().delete(uri, null, null);
+
+                // Close the activity
+                finish();
+                return true;
+            default:
+                throw new IllegalArgumentException("Invalid menu item selected: " + item);
+        }
     }
 }
