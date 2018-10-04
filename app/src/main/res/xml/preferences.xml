@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:key=""
+        android:title="Show future check outs only"
+        android:summary="Past check outs can be accessed in the 'past check outs' screen."
+        android:defaultValue="true"
+        />
+
+    <CheckBoxPreference
+        android:title="Check Out Reminders"
+        android:summary="Check-It will push a notification to your phone before each check out."
+        android:defaultValue="true"
+        />
+
+    <com.example.android.checkit.RangePickerPreference
+        android:title="Notification Range"
+        android:key="shared_prefs_time_range_key"
+        />
+
+</PreferenceScreen>

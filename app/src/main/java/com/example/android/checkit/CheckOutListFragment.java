@@ -116,6 +116,10 @@ public class CheckOutListFragment extends Fragment implements android.support.v4
                 getContext().getContentResolver().delete(CheckOutEntry.CONTENT_URI, null, null);
                 getLoaderManager().restartLoader(LOADER_CHECK_OUT_LIST_ID, null, this);
                 return true;
+            case R.id.action_open_settings:
+                // Open the settings activity
+                startActivity(new Intent(getContext(), SettingsActivity.class));
+                return true;
             default:
                 throw new IllegalArgumentException("Invalid menu item selected: " + item);
         }

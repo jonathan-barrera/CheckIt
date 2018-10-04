@@ -23,6 +23,7 @@
             android:exported="false" />
 
         <activity android:name=".EditCheckOutActivity"></activity>
+        <activity android:name=".SettingsActivity" />
     </application>
 
 </manifest>

@@ -60,7 +60,8 @@ public class CheckOutAlertFragment extends DialogFragment implements android.sup
         String time = DateUtils.formatCheckOutTime(bundle.getString(CHECK_OUT_TIME_KEY));
 
         // Set text for the text view
-        mTextView.setText("You're due to check out today from " + accommodation + " at " + time + ". " +
+        mTextView.setText("You're due to check out today from " +
+                accommodation + " at " + time + ". " +
                 "Don't forget to pack all your valuables!");
 
         // Initialize and set adapter

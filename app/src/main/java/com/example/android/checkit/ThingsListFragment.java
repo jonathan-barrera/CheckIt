@@ -7,6 +7,7 @@ import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -120,6 +121,10 @@ public class ThingsListFragment extends Fragment implements android.support.v4.a
         switch(item.getItemId()) {
             case R.id.action_delete_all_things:
                 getContext().getContentResolver().delete(ThingEntry.CONTENT_URI, null, null);
+                return true;
+            case R.id.action_open_settings:
+                // Open the settings activity
+                startActivity(new Intent(getContext(), SettingsActivity.class));
                 return true;
             default:
                 throw new IllegalArgumentException("Invalid menu item selected: " + item);
